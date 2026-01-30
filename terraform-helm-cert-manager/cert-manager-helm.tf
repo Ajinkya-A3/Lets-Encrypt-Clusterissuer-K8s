@@ -6,10 +6,10 @@ resource "helm_release" "cert_manager" {
   chart      = "cert-manager"
 
   # 🔒 FIXED chart version (matches existing cluster)
-  version = "1.19.2"
+  version = var.chart_version
 
   values = [
-    file("${path.module}/values-cert-manager.yaml")
+    file(var.values_path)
   ]
 
   wait    = true
