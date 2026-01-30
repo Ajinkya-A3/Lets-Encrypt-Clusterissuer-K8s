@@ -1,5 +1,5 @@
 output "namespace" {
-  value = kubernetes_namespace.cert_manager.metadata[0].name
+  value = kubernetes_namespace_v1.cert_manager.metadata[0].name
 }
 
 output "helm_release_name" {
