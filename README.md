@@ -111,7 +111,7 @@ kubectl get validatingwebhookconfigurations cert-manager-webhook -o yaml
 apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
 metadata:
-  name: solvox-gateway-ip
+  name: solvox-gateway
   namespace: gateway-system
 spec:
   gatewayClassName: gke-l7-global-external-managed
@@ -161,7 +161,7 @@ spec:
           gatewayHTTPRoute:
             parentRefs:
               - kind: Gateway
-                name: solvox-gateway-ip
+                name: solvox-gateway
                 namespace: gateway-system
 ```
 
