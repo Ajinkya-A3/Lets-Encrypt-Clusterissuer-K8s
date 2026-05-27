@@ -14,7 +14,7 @@ It is written as a **production runbook** and includes all commands, YAMLs, and 
 ```
 Internet
   |
-DNS (test.solvox.ai -> Static Global IP)
+DNS (test.example.com -> Static Global IP)
   |
 GKE Gateway (HTTP :80)
   |
@@ -111,13 +111,13 @@ kubectl get validatingwebhookconfigurations cert-manager-webhook -o yaml
 apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
 metadata:
-  name: solvox-gateway
+  name: example-gateway
   namespace: gateway-system
 spec:
   gatewayClassName: gke-l7-global-external-managed
   addresses:
     - type: NamedAddress
-      value: solvox-gateway-ip
+      value: example-gateway-ip
   listeners:
     - name: http
       port: 80
@@ -136,7 +136,7 @@ kubectl apply -f gateway.yaml
 Verify static IP binding:
 
 ```bash
-kubectl describe gateway solvox-gateway-ip -n gateway-system | grep -A3 Addresses
+kubectl describe gateway example-gateway-ip -n gateway-system | grep -A3 Addresses
 ```
 
 ---
@@ -152,7 +152,7 @@ metadata:
   name: letsencrypt-prod
 spec:
   acme:
-    email: ajinkya.acharekar@finrius.com
+    email: ajinkyaa3xd@gmail.com
     server: https://acme-v02.api.letsencrypt.org/directory
     privateKeySecretRef:
       name: letsencrypt-prod-account-key
@@ -161,7 +161,7 @@ spec:
           gatewayHTTPRoute:
             parentRefs:
               - kind: Gateway
-                name: solvox-gateway
+                name: example-gateway
                 namespace: gateway-system
 ```
 
@@ -237,15 +237,15 @@ kubectl get referencegrant -n cert-manager
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: test-solvox-ai
+  name: test-cert
   namespace: gateway-system
 spec:
-  secretName: test-solvox-ai-tls
+  secretName: test-cert-tls
   issuerRef:
     name: letsencrypt-prod
     kind: ClusterIssuer
   dnsNames:
-    - test.solvox.ai
+    - test.example.com
 ```
 
 Apply:
@@ -260,7 +260,7 @@ kubectl apply -f certificate.yaml
 
 ```bash
 kubectl get certificate -n gateway-system
-kubectl describe certificate test-solvox-ai -n gateway-system
+kubectl describe certificate test-cert -n gateway-system
 ```
 
 ### ACME Challenge
@@ -297,13 +297,13 @@ Programmed: True
 ## 10. Verify TLS Secret (Final Proof)
 
 ```bash
-kubectl get secret test-solvox-ai-tls -n gateway-system
+kubectl get secret test-cert-tls -n gateway-system
 ```
 
 Inspect certificate:
 
 ```bash
-kubectl get secret test-solvox-ai-tls -n gateway-system   -o jsonpath='{.data.tls\.crt}' | base64 --decode | openssl x509 -text -noout
+kubectl get secret test-cert-tls -n gateway-system   -o jsonpath='{.data.tls\.crt}' | base64 --decode | openssl x509 -text -noout
 ```
 
 Issuer must be **Let’s Encrypt**.
